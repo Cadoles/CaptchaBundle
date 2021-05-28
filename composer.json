@@ -1,9 +1,9 @@
 {
-    "name": "gregwar/captcha-bundle",
+    "name": "cadoles/captcha",
     "type": "symfony-bundle",
     "description": "Captcha bundle",
     "keywords": ["symfony2", "symfony", "captcha", "bot", "visual", "code", "security", "spam"],
-    "homepage": "https://github.com/Gregwar/CaptchaBundle",
+    "homepage": "https://github.com/Cadoles/CaptchaBundle",
     "license": "MIT",
     "authors": [
         {
