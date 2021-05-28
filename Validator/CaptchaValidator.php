@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Captcha validator
@@ -47,6 +48,13 @@ class CaptchaValidator
     private $translator;
 
     /**
+     * Request
+     *
+     * @var Request
+     */
+    private $req;
+
+    /**
      * @param TranslatorInterface $translator
      * @param SessionInterface    $session
      * @param string              $key
@@ -54,7 +62,7 @@ class CaptchaValidator
      * @param string              $bypassCode
      * @param int                 $humanity
      */
-    public function __construct(TranslatorInterface $translator, SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
+    public function __construct(TranslatorInterface $translator, SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity, Request $req = null)
     {
         $this->translator       = $translator;
         $this->session          = $session;
@@ -62,6 +70,7 @@ class CaptchaValidator
         $this->invalidMessage   = $invalidMessage;
         $this->bypassCode       = (string)$bypassCode;
         $this->humanity         = $humanity;
+        $this->req = $req;
     }
 
     /**
@@ -90,10 +99,11 @@ class CaptchaValidator
             }
         }
 
-        $this->session->remove($this->key);
-
-        if ($this->session->has($this->key . '_fingerprint')) {
-            $this->session->remove($this->key . '_fingerprint');
+        if (null == $this->req || 1 < $this->req->get('flow_registration_step')) {
+            $this->session->remove($this->key);
+            if ($this->session->has($this->key.'_fingerprint')) {
+                $this->session->remove($this->key.'_fingerprint');
+            }
         }
     }
 
