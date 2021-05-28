@@ -62,7 +62,8 @@ class CaptchaType extends AbstractType
             sprintf('%s%s', self::SESSION_KEY_PREFIX, $options['session_key']),
             $options['invalid_message'],
             $options['bypass_code'],
-            $options['humanity']
+            $options['humanity'],
+            $options['request']
         );
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, array($validator, 'validate'));
@@ -121,6 +122,7 @@ class CaptchaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $this->options['mapped'] = false;
+        $this->options['request'] = null;
         $resolver->setDefaults($this->options);
     }
 

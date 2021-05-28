@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Captcha validator.
@@ -54,13 +55,21 @@ class CaptchaValidator
      */
     private $translator;
 
+    /**
+     * Request
+     *
+     * @var Request
+     */
+    private $req;
+
     public function __construct(
         TranslatorInterface $translator,
         SessionInterface $session,
         string $key,
         string $invalidMessage,
         ?string $bypassCode,
-        int $humanity
+        int $humanity,
+        ?Request $req
     ) {
         $this->translator = $translator;
         $this->session = $session;
@@ -94,10 +103,11 @@ class CaptchaValidator
             }
         }
 
-        $this->session->remove($this->key);
-
-        if ($this->session->has($this->key.'_fingerprint')) {
-            $this->session->remove($this->key.'_fingerprint');
+        if (null == $this->req || 1 < $this->req->get('flow_registration_step')) {
+            $this->session->remove($this->key);
+            if ($this->session->has($this->key.'_fingerprint')) {
+                $this->session->remove($this->key.'_fingerprint');
+            }
         }
     }
 
