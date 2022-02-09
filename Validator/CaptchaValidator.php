@@ -77,6 +77,7 @@ class CaptchaValidator
         $this->invalidMessage = $invalidMessage;
         $this->bypassCode = $bypassCode;
         $this->humanity = $humanity;
+        $this->req = $req;
     }
 
     public function validate(FormEvent $event): void
